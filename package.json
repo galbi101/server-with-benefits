@@ -1,7 +1,7 @@
 {
 	"name": "server-with-benefits",
 	"author": "Gal Ben-Ishay <galbi101@gmail.com>",
-	"version": "0.9.2",
+	"version": "0.9.3",
 	"engines": {
 		"node": ">=0.10"
 	},
@@ -11,7 +11,7 @@
 		"http-proxy": "~1.1.5"
 	},
 	"bin": {
-		"server": "./server.js"
+		"server": "./bin/server"
 	},
 	"scripts": {
 		"start": "node server.js"

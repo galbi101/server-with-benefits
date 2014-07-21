@@ -1,9 +1,10 @@
 
 var fs = require('fs');
 var stripJsonComments = require('strip-json-comments');
-//var conf = require('./serverConf.json');
 
-const confFile = './serverConf.json';
+const confFile = process.env.SERVER_CONF_FILE || (__dirname + '/serverConf.json');
+
+console.log("\nReading configuration from file: " + confFile);
 
 var conf;
 try {
@@ -12,7 +13,7 @@ try {
 catch (e) {}
 
 if (!conf || !Array.isArray(conf.servers) || !conf.servers.length) {
-	console.log("Problem parsing servers configuration from file: " + confFile +
+	console.error("\nError: Problem parsing servers configuration file." +
 	"\nPlease check it and run again.");
 	return;
 }
