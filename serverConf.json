@@ -7,6 +7,10 @@
 //				"host": "host name",
 //				"port": 80,
 //				"pathPatterns": [] // e.g. ["^/api/"]
+//			},
+//			"delay": { // (OPTIONAL) Adding delay to responses for some path patterns
+//				"pathPatterns": [] // e.g. ["^/api/"],
+//				"time": 2000 // the delay amount
 //			}
 		}
 		// more servers...

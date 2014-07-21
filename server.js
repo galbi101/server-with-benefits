@@ -22,9 +22,19 @@ var httpProxy = require('http-proxy');
 
 var proxy = httpProxy.createProxyServer();
 
-var getProxyCheckRequestHandler = function(proxyHost, proxyPort, proxyRegExp) {
+var getDelayCheckRequestHandler = function(pathRegExp, delay) {
 	return function(req, res, next) {
-		if (proxyRegExp.test(req.url)) {
+		if (pathRegExp.test(req.url)) {
+			setTimeout(next, delay);
+		}
+		else {
+			next();
+		}
+	};
+};
+var getProxyCheckRequestHandler = function(pathRegExp, proxyHost, proxyPort) {
+	return function(req, res, next) {
+		if (pathRegExp.test(req.url)) {
 			proxy.web(req, res, {
 				target: {
 					host: proxyHost,
@@ -39,11 +49,19 @@ var getProxyCheckRequestHandler = function(proxyHost, proxyPort, proxyRegExp) {
 };
 
 conf.servers.forEach(function(serverConf) {
-	var app = express();
+	var app = express(),
+		pathRegExp,
+		messages = "\nServing '" + serverConf.srcDir + "' on port " + serverConf.port;
+	if (serverConf.delay) {
+		pathRegExp = new RegExp("(?:" + serverConf.delay.pathPatterns.join(")|(?:") + ")");
+		app.use(getDelayCheckRequestHandler(pathRegExp, serverConf.delay.time));
+		messages += "\nDelay is activated for path patterns: " + serverConf.delay.pathPatterns.join(", ");
+	}
 	if (serverConf.proxy) {
-		var proxyRegExp = new RegExp("(?:" + serverConf.proxy.pathPatterns.join(")|(?:") + ")");
-		app.use(getProxyCheckRequestHandler(serverConf.proxy.host, serverConf.proxy.port, proxyRegExp));
+		pathRegExp = new RegExp("(?:" + serverConf.proxy.pathPatterns.join(")|(?:") + ")");
+		app.use(getProxyCheckRequestHandler(pathRegExp, serverConf.proxy.host, serverConf.proxy.port));
+		messages += "\nRedirecting path patterns: " + serverConf.proxy.pathPatterns.join(", ") + " to " + serverConf.proxy.host + ":" + serverConf.proxy.port;
 	}
 	app.use(express.static(serverConf.srcDir)).listen(serverConf.port);
-	console.log("Serving '" + serverConf.srcDir + "' on port " + serverConf.port);
+	console.log(messages+="\n");
 });
