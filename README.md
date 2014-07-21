@@ -14,21 +14,21 @@ with the file's full path as its value (e.g. SERVER_CONF_FILE=C:\dev\serverConf.
 
 the configuration file should look like:
 
-```json
+```javascript
 {
 	"servers": [
 		{
-//			"srcDir": "enter your path here", // path to your local server source directory
-//			"port": 80, // the server listen port (default 80)
-//			"proxy": { // (OPTIONAL) A proxy to a remote server for some path patterns
-//				"host": "host name",
-//				"port": 80,
-//				"pathPatterns": [] // e.g. ["^/api/"]
-//			},
-//			"delay": { // (OPTIONAL) Adding delay to responses for some path patterns
-//				"pathPatterns": [] // e.g. ["^/api/"],
-//				"time": 2000 // the delay amount
-//			}
+			"srcDir": "enter your path here", // path to your local server source directory
+			"port": 80, // the server listen port (default 80)
+			"proxy": { // (OPTIONAL) A proxy to a remote server for some path patterns
+				"host": "host name",
+				"port": 80,
+				"pathPatterns": [] // e.g. ["^/api/"]
+			},
+			"delay": { // (OPTIONAL) Adding delay to responses for some path patterns
+				"pathPatterns": [] // e.g. ["^/api/"],
+				"time": 2000 // the delay amount
+			}
 		}
 		// more servers...
 	]
