@@ -20,7 +20,7 @@
 	"main": "server.js",
 	"repository": {
 		"type": "git",
-		"url": "git://github.com/galbi101/node-static-server.git"
+		"url": "git://github.com/galbi101/server-with-benefitsgit"
 	},
 	"keywords": [
 		"web",
@@ -33,7 +33,7 @@
 	],
 	"license": "ISC",
 	"bugs": {
-		"url": "https://github.com/galbi101/node-static-server/issues"
+		"url": "https://github.com/galbi101/server-with-benefits/issues"
 	},
-	"homepage": "https://github.com/galbi101/node-static-server"
+	"homepage": "https://github.com/galbi101/server-with-benefits"
 }
