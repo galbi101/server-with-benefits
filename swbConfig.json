@@ -1,0 +1,34 @@
+{
+	"servers": [
+//		{
+//			"srcDir": "enter/your/path/here", // path to your local server source directory
+//			"port": 80, // the server listen port (default 80)
+//			"proxy": { // (OPTIONAL) A proxy to a remote server for some path patterns
+//				"host": "host name",
+//				"port": 80,
+//				"pathPatterns": [] // e.g. ["^/api/"]
+//			},
+//			"delay": { // (OPTIONAL) Adding delay to responses for some path patterns
+//				"pathPatterns": [], // e.g. ["^/api/"],
+//				"time": 2000 // the delay amount
+//			},
+//			"fixtures": [ (OPTIONAL) // Fixture definitions
+//				{
+//					"active": true, // On/Off switch for this fixture
+//					"request": {
+//						"methods": ["GET"],
+//						"pathPattern": "^/api/rest/foo"
+//					},
+//					"response": {
+//						"status": 200,
+//						"body": {
+//							"hello": "Nice Fixture"
+//						}
+//					}
+//				}
+//				// more fixtures...
+//			]
+//		}
+//		// more servers...
+	]
+}

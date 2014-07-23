@@ -8,9 +8,9 @@ A static Node.js file web server with options for proxing requests and delaying/
 $ npm install -g server-with-benefits
 ```
 
-Then, edit serverConf.json that is placed inside the package to setup your server(s).
-Alternatively, you can create your own configuration file anywhere you like, and set an environment variable named "SERVER_CONF_FILE"
-with the file's full path as its value (e.g. SERVER_CONF_FILE=C:\dev\serverConf.json).
+Then, edit swbConfig.json that is placed inside the package to setup your server(s).
+Alternatively, you can create your own configuration file anywhere you like, and set an environment variable named "SWB_CONF_FILE"
+with the file's full path as its value (e.g. SWB_CONF_FILE=C:\dev\swbConfig.json).
 
 the configuration file should look like:
 
@@ -18,7 +18,7 @@ the configuration file should look like:
 {
 	"servers": [
 		{
-			"srcDir": "enter your path here", // path to your local server source directory
+			"srcDir": "enter/your/path/here", // path to your local server source directory
 			"port": 80, // the server listen port (default 80)
 			"proxy": { // (OPTIONAL) A proxy to a remote server for some path patterns
 				"host": "host name",
@@ -26,9 +26,25 @@ the configuration file should look like:
 				"pathPatterns": [] // e.g. ["^/api/"]
 			},
 			"delay": { // (OPTIONAL) Adding delay to responses for some path patterns
-				"pathPatterns": [] // e.g. ["^/api/"],
+				"pathPatterns": [], // e.g. ["^/api/"],
 				"time": 2000 // the delay amount
-			}
+			},
+			"fixtures": [ (OPTIONAL) // Fixture definitions
+				{
+					"active": true, // On/Off switch for this fixture
+					"request": {
+						"methods": ["GET"],
+						"pathPattern": "^/api/rest/foo"
+					},
+					"response": {
+						"status": 200,
+						"body": {
+							"hello": "Nice Fixture"
+						}
+					}
+				}
+				// more fixtures...
+			]
 		}
 		// more servers...
 	]
@@ -38,5 +54,5 @@ the configuration file should look like:
 ## Usage
 
 ```sh
-$ server
+$ swb
 ```

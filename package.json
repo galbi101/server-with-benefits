@@ -1,17 +1,18 @@
 {
 	"name": "server-with-benefits",
 	"author": "Gal Ben-Ishay <galbi101@gmail.com>",
-	"version": "0.9.5",
+	"version": "0.10.1",
 	"engines": {
 		"node": ">=0.10"
 	},
 	"dependencies": {
 		"express": "~4.6.1",
 		"strip-json-comments": "~0.1.3",
-		"http-proxy": "~1.1.5"
+		"http-proxy": "~1.1.5",
+		"cli-color": "~0.3.2"
 	},
 	"bin": {
-		"server": "./bin/server"
+		"swb": "./bin/server"
 	},
 	"scripts": {
 		"start": "node server.js"
@@ -20,7 +21,7 @@
 	"main": "server.js",
 	"repository": {
 		"type": "git",
-		"url": "git://github.com/galbi101/server-with-benefitsgit"
+		"url": "git://github.com/galbi101/server-with-benefits.git"
 	},
 	"keywords": [
 		"web",
