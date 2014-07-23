@@ -1,7 +1,7 @@
 {
 	"name": "server-with-benefits",
 	"author": "Gal Ben-Ishay <galbi101@gmail.com>",
-	"version": "0.10.1",
+	"version": "0.10.3",
 	"engines": {
 		"node": ">=0.10"
 	},
@@ -30,6 +30,7 @@
 		"proxy",
 		"delay",
 		"mock",
+		"fixture",
 		"webserver"
 	],
 	"license": "ISC",

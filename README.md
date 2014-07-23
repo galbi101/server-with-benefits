@@ -29,7 +29,7 @@ the configuration file should look like:
 				"pathPatterns": [], // e.g. ["^/api/"],
 				"time": 2000 // the delay amount
 			},
-			"fixtures": [ (OPTIONAL) // Fixture definitions
+			"fixtures": [ // (OPTIONAL) Fixture definitions
 				{
 					"active": true, // On/Off switch for this fixture
 					"request": {
