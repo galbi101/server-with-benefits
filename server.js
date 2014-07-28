@@ -36,6 +36,12 @@ var express = require('express');
 var httpProxy = require('http-proxy');
 
 var proxy = httpProxy.createProxyServer();
+proxy.on('error', function (err, req, res) {
+	res.writeHead(500, {
+		'Content-Type': 'text/plain'
+	});
+	res.end("SWB: Error occurred when trying to reach proxy server");
+});
 
 var getDelayCheckRequestHandler = function(pathRegExp, delay) {
 	return function(req, res, next) {
@@ -59,14 +65,11 @@ var getFixtureCheckRequestHandler = function(fixtures) {
 		}
 	};
 };
-var getProxyCheckRequestHandler = function(pathRegExp, proxyHost, proxyPort) {
+var getProxyCheckRequestHandler = function(pathRegExp, proxyTarget) {
 	return function(req, res, next) {
 		if (pathRegExp.test(req.url)) {
 			proxy.web(req, res, {
-				target: {
-					host: proxyHost,
-					port: proxyPort
-				}
+				target: proxyTarget
 			});
 		}
 		else {
@@ -98,8 +101,9 @@ conf.servers.forEach(function(serverConf) {
 	}
 	if (serverConf.proxy) {
 		pathRegExp = new RegExp("(?:" + serverConf.proxy.pathPatterns.join(")|(?:") + ")");
-		app.use(getProxyCheckRequestHandler(pathRegExp, serverConf.proxy.host, serverConf.proxy.port));
-		messages += "\n" + featureStyle("Redirecting") + " path patterns: " + boldStyle(serverConf.proxy.pathPatterns.join(", ")) + " to " + proxyStyle(serverConf.proxy.host + ":" + serverConf.proxy.port);
+		app.use(getProxyCheckRequestHandler(pathRegExp, serverConf.proxy.target));
+		messages += "\n" + featureStyle("Redirecting") + " path patterns: " + boldStyle(serverConf.proxy.pathPatterns.join(", ")) + " to "
+			+ proxyStyle(typeof serverConf.proxy.target == 'string' ? serverConf.proxy.target : (serverConf.proxy.target.host + ":" + serverConf.proxy.target.port));
 	}
 	app.use(express.static(serverConf.srcDir)).listen(serverConf.port);
 	console.log(messages);

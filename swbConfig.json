@@ -4,8 +4,10 @@
 //			"srcDir": "enter/your/path/here", // path to your local server source directory
 //			"port": 80, // the server listen port (default 80)
 //			"proxy": { // (OPTIONAL) A proxy to a remote server for some path patterns
-//				"host": "host name",
-//				"port": 80,
+//				"target": { // can be an object with host and port, or a full url string e.g. "http://myproxy:80"
+//					"host": "hostname",
+//					"port": 80
+//				},
 //				"pathPatterns": [] // e.g. ["^/api/"]
 //			},
 //			"delay": { // (OPTIONAL) Adding delay to responses for some path patterns
