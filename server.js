@@ -5,7 +5,7 @@ var clc = require('cli-color');
 
 const 
 	ENV_VAR_KEY = 'SWB_CONF_FILE',
-	CONF_FILE = process.env[ENV_VAR_KEY] || (__dirname + '/swbConfig.json'),
+	CONF_FILE = process.env[ENV_VAR_KEY] || (process.cwd() + '/swbConfig.json'),
 	// Console text styling
 	errorStyle = clc.red.bold,
 	headerStyle = clc.yellow.bold,

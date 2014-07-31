@@ -2,7 +2,7 @@
 	"servers": [
 		{
 			"srcDir": "enter/your/path/here", // path to your local server root source directory
-			"paths": { // (OPTIONAL) define routes to specific paths, relative to the 'srcDir'
+			"paths": { // (OPTIONAL) define routes for specific paths, relative to the 'srcDir'
 				"/": "/src", // i.e. http://<your_host_name>/ -> <srcDir>/src
 				"/lib": "/lib" // i.e. http://<your_host_name>/lib -> <srcDir>/lib
 			},

@@ -8,18 +8,19 @@ A static Node.js file web server with options for proxing requests and delaying/
 $ npm install -g server-with-benefits
 ```
 
-Then, to setup your server(s), edit **_swbConfig.json** that is placed inside the package and rename it to **swbConfig.json**.
-Alternatively (and *preferably*), you can create your own configuration file anywhere you like, and set an environment variable named "SWB_CONF_FILE"
+Then, to setup your server(s), edit ___swbConfig.json__ that comes with the package and rename it to __swbConfig.json__.  
+You can place this file anywhere you like, but make sure you then start the server (see [Usage](#usage)) from the directory where it's placed.    
+Alternatively (and *preferably*), you can avoid this restriction by setting an environment variable named "SWB_CONF_FILE"
 with the file's full path as its value (e.g. SWB_CONF_FILE=C:\dev\swbConfig.json).
 
-the configuration file should look like:
+The configuration file should be of the following format:
 
 ```javascript
 {
 	"servers": [
 		{
 			"srcDir": "enter/your/path/here", // path to your local server root source directory
-			"paths": { // (OPTIONAL) define routes to specific paths, relative to the 'srcDir'
+			"paths": { // (OPTIONAL) define routes for specific paths, relative to the 'srcDir'
 				"/": "/src", // i.e. http://<your_host_name>/ -> <srcDir>/src
 				"/lib": "/lib" // i.e. http://<your_host_name>/lib -> <srcDir>/lib
 			},

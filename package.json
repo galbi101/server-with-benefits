@@ -1,7 +1,7 @@
 {
 	"name": "server-with-benefits",
 	"author": "Gal Ben-Ishay <galbi101@gmail.com>",
-	"version": "0.10.6",
+	"version": "0.10.7",
 	"engines": {
 		"node": ">=0.10"
 	},
@@ -17,6 +17,7 @@
 	"scripts": {
 		"start": "node server.js"
 	},
+	"preferGlobal": true,
 	"description": "A static file web server with options for proxing requests and delaying/mocking responses. Useful for web development.",
 	"main": "server.js",
 	"repository": {
