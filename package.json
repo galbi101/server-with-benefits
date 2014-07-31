@@ -1,7 +1,7 @@
 {
 	"name": "server-with-benefits",
 	"author": "Gal Ben-Ishay <galbi101@gmail.com>",
-	"version": "0.10.5",
+	"version": "0.10.6",
 	"engines": {
 		"node": ">=0.10"
 	},

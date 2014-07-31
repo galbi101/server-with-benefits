@@ -1,20 +1,3 @@
-# server-with-benefits
-
-A static Node.js file web server with options for proxing requests and delaying/mocking responses. Useful for web development.
-
-## Installation
-
-```sh
-$ npm install -g server-with-benefits
-```
-
-Then, to setup your server(s), edit **_swbConfig.json** that is placed inside the package and rename it to **swbConfig.json**.
-Alternatively (and *preferably*), you can create your own configuration file anywhere you like, and set an environment variable named "SWB_CONF_FILE"
-with the file's full path as its value (e.g. SWB_CONF_FILE=C:\dev\swbConfig.json).
-
-the configuration file should look like:
-
-```javascript
 {
 	"servers": [
 		{
@@ -55,10 +38,3 @@ the configuration file should look like:
 		// more servers...
 	]
 }
-```
-
-## Usage
-
-```sh
-$ swb
-```

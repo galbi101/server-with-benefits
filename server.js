@@ -105,6 +105,11 @@ conf.servers.forEach(function(serverConf) {
 		messages += "\n" + featureStyle("Redirecting") + " path patterns: " + boldStyle(serverConf.proxy.pathPatterns.join(", ")) + " to "
 			+ proxyStyle(typeof serverConf.proxy.target == 'string' ? serverConf.proxy.target : (serverConf.proxy.target.host + ":" + serverConf.proxy.target.port));
 	}
+	if (serverConf.paths) {
+		for (var path in serverConf.paths) {
+			app.use(path, express.static(serverConf.srcDir + serverConf.paths[path]));
+		}
+	}
 	app.use(express.static(serverConf.srcDir)).listen(serverConf.port);
 	console.log(messages);
 });
