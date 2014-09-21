@@ -40,8 +40,13 @@ The configuration file should be of the following format:
 				{
 					"active": true, // On/Off switch for this fixture
 					"request": {
-						"methods": ["GET"],
-						"pathPattern": "^/api/rest/foo"
+						"methods": ["GET", "POST"],
+						"pathPattern": "^/api/rest/foo",
+						// (OPTIONAL) additional condition that checks that the provided object is a subset of
+						// the request's payload. This check is relevant only for POST, PUT and OPTIONS methods
+						"payload": {
+							"name": "bar"
+						}
 					},
 					"response": {
 						"status": 200,

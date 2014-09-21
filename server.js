@@ -33,7 +33,9 @@ if (!conf || !Array.isArray(conf.servers) || !conf.servers.length) {
 }
 
 var express = require('express');
+var bodyParser = require('body-parser');
 var httpProxy = require('http-proxy');
+var _ = require('underscore');
 
 var proxy = httpProxy.createProxyServer();
 proxy.on('error', function (err, req, res) {
@@ -57,7 +59,12 @@ var getFixtureCheckRequestHandler = function(fixtures) {
 	return function(req, res, next) {
 		if (!fixtures.some(function(fixture) {
 			if (fixture.methodRegExp.test(req.method) && fixture.pathRegExp.test(req.url)) {
-				res.json(fixture.response.status, fixture.response.body);
+				if (fixture.payload && _.contains(['POST', 'PUT', 'OPTIONS'], req.method)) {
+					if (!_.isEqual(_.pick(req.body, _.keys(fixture.payload)), fixture.payload)) {
+						return false;
+					}
+				}
+				res.json(fixture.response.status, fixture.response.body || {});
 				return true;
 			}
 		})) {
@@ -88,15 +95,22 @@ conf.servers.forEach(function(serverConf) {
 		messages += "\n" + featureStyle("Delay") + " of " + delayTimeStyle(serverConf.delay.time + " ms") + " is activated for path patterns: " + boldStyle(serverConf.delay.pathPatterns.join(", "));
 	}
 	if (serverConf.fixtures) {
-		var activeFixtures = serverConf.fixtures.filter(function(fixture) {return fixture.active;});
+		var activeFixtures = serverConf.fixtures.filter(function(fixture) {return fixture.active;}),
+			useBodyParser = false;
 		activeFixtures.forEach(function(fixture) {
 			fixture.request.methods.forEach(function(method, i, methods) {
 				methods[i] = method.toUpperCase();
 			});
 			fixture.methodRegExp = new RegExp("(?:" + fixture.request.methods.join(")|(?:") + ")");
 			fixture.pathRegExp = new RegExp(fixture.request.pathPattern);
+			if (fixture.request.payload) {
+				useBodyParser = true;
+				fixture.payload = fixture.request.payload;
+			}
 			messages += "\n" + featureStyle("Fixture") + " is enabled for methods " + boldStyle(fixture.request.methods.join(", ")) + " and path pattern " + boldStyle(fixture.request.pathPattern);
+			fixture.request.payload && (messages += " with payload " + JSON.stringify(fixture.request.payload));
 		});
+		useBodyParser && app.use(bodyParser.json());
 		app.use(getFixtureCheckRequestHandler(activeFixtures));
 	}
 	if (serverConf.proxy) {
