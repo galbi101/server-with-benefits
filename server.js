@@ -5,7 +5,7 @@ var clc = require('cli-color');
 
 const 
 	ENV_VAR_KEY = 'SWB_CONF_FILE',
-	CONF_FILE = process.env[ENV_VAR_KEY] || (process.cwd() + '/swbConfig.json'),
+	CONF_FILE = process.argv[2] || process.env[ENV_VAR_KEY] || (process.cwd() + '/swbConfig.json'),
 	// Console text styling
 	errorStyle = clc.red.bold,
 	headerStyle = clc.yellow.bold,
@@ -88,7 +88,7 @@ var getProxyCheckRequestHandler = function(pathRegExp, proxyTarget) {
 conf.servers.forEach(function(serverConf) {
 	var app = express(),
 		pathRegExp,
-		messages = "\n" + headerStyle("Serving ") + fileStyle(serverConf.srcDir) + " on port " + portStyle(serverConf.port);
+		messages = "\n" + headerStyle("Serving ") + (serverConf.static && serverConf.static.srcDir ? fileStyle(serverConf.static.srcDir) + " " : "") + "on port " + portStyle(serverConf.port);
 	if (serverConf.delay) {
 		pathRegExp = new RegExp("(?:" + serverConf.delay.pathPatterns.join(")|(?:") + ")");
 		app.use(getDelayCheckRequestHandler(pathRegExp, serverConf.delay.time));
@@ -119,11 +119,12 @@ conf.servers.forEach(function(serverConf) {
 		messages += "\n" + featureStyle("Redirecting") + " path patterns: " + boldStyle(serverConf.proxy.pathPatterns.join(", ")) + " to "
 			+ proxyStyle(typeof serverConf.proxy.target == 'string' ? serverConf.proxy.target : (serverConf.proxy.target.host + ":" + serverConf.proxy.target.port));
 	}
-	if (serverConf.paths) {
+	if (serverConf.static && serverConf.static.srcDir && serverConf.static.paths) {
 		for (var path in serverConf.paths) {
-			app.use(path, express.static(serverConf.srcDir + serverConf.paths[path]));
+			app.use(path, express.static(serverConf.static.srcDir + serverConf.static.paths[path]));
 		}
 	}
-	app.use(express.static(serverConf.srcDir)).listen(serverConf.port);
+	serverConf.static && serverConf.static.srcDir && app.use(express.static(serverConf.static.srcDir));
+	app.listen(serverConf.port);
 	console.log(messages);
 });
