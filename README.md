@@ -22,10 +22,10 @@ The configuration file should be of the following format:
 			"port": 80, // the server listen port (default 80)
 			"static": { // (OPTIONAL) the static resources that will be served.
 				"srcDir": "enter/your/path/here", // path to your local server root source directory
-                "paths": { // (OPTIONAL) define routes for specific paths, relative to the 'srcDir'
-                	"/": "/src", // i.e. http://<your_host_name>/ -> <srcDir>/src
-                	"/lib": "/lib" // i.e. http://<your_host_name>/lib -> <srcDir>/lib
-                }
+				"paths": { // (OPTIONAL) define routes for specific paths, relative to the 'srcDir'
+					"/": "/src", // i.e. http://<your_host_name>/ -> <srcDir>/src
+					"/lib": "/lib" // i.e. http://<your_host_name>/lib -> <srcDir>/lib
+				}
 			},
 			"proxy": { // (OPTIONAL) A proxy to a remote server for some path patterns
 				"target": { // can be an object with host and port, or a full url string e.g. "http://myproxy:80"
