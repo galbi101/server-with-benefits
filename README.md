@@ -1,5 +1,9 @@
 # server-with-benefits
 
+[![NPM](https://nodei.co/npm/server-with-benefits.png?downloads=true&downloadRank=true)](https://www.npmjs.com/package/server-with-benefits)
+
+[![npm version](https://badge.fury.io/js/server-with-benefits.png)](https://www.npmjs.com/package/server-with-benefits)
+
 A static Node.js file web server with options for proxing requests and delaying/mocking responses. Useful for web development.
 
 ## Installation
