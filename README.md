@@ -15,7 +15,7 @@ $ npm install -g server-with-benefits
 Then, to setup your server(s), edit **_swbConfig.json** that comes with the package and rename it to **swbConfig.json**.  
 You can place this file anywhere you like, but make sure you then start the server (see [Usage](#usage)) from the directory where it's placed.    
 Alternatively (and *preferably*), you can avoid this restriction by setting an environment variable named **SWB_CONF_FILE**
-with the file's full path as its value (e.g. SWB_CONF_FILE=C:\dev\swbConfig.json).
+with the file's full path as its value (e.g. SWB_CONF_FILE=C:\dev\swbConfig.json), or by passing the path as an only argument.
 
 The configuration file should be of the following format:
 
@@ -72,5 +72,5 @@ The configuration file should be of the following format:
 ## Usage
 
 ```sh
-$ swb
+$ swb [config-file-path]
 ```

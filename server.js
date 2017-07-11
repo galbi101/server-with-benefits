@@ -72,9 +72,12 @@ var getFixtureCheckRequestHandler = function(fixtures) {
 		}
 	};
 };
-var getProxyCheckRequestHandler = function(pathRegExp, proxyTarget) {
+var getProxyCheckRequestHandler = function(pathRegExp, proxyTarget, pathRewrite) {
 	return function(req, res, next) {
 		if (pathRegExp.test(req.url)) {
+			if (pathRewrite != null) {
+				req.url = req.url.replace(new RegExp(pathRegExp), pathRewrite);
+			}
 			proxy.web(req, res, {
 				target: proxyTarget
 			});
@@ -87,11 +90,9 @@ var getProxyCheckRequestHandler = function(pathRegExp, proxyTarget) {
 
 conf.servers.forEach(function(serverConf) {
 	var app = express(),
-		pathRegExp,
 		messages = "\n" + headerStyle("Serving ") + (serverConf.static && serverConf.static.srcDir ? fileStyle(serverConf.static.srcDir) + " " : "") + "on port " + portStyle(serverConf.port);
 	if (serverConf.delay) {
-		pathRegExp = new RegExp("(?:" + serverConf.delay.pathPatterns.join(")|(?:") + ")");
-		app.use(getDelayCheckRequestHandler(pathRegExp, serverConf.delay.time));
+		app.use(getDelayCheckRequestHandler(new RegExp("(?:" + serverConf.delay.pathPatterns.join(")|(?:") + ")"), serverConf.delay.time));
 		messages += "\n" + featureStyle("Delay") + " of " + delayTimeStyle(serverConf.delay.time + " ms") + " is activated for path patterns: " + boldStyle(serverConf.delay.pathPatterns.join(", "));
 	}
 	if (serverConf.fixtures) {
@@ -114,10 +115,26 @@ conf.servers.forEach(function(serverConf) {
 		app.use(getFixtureCheckRequestHandler(activeFixtures));
 	}
 	if (serverConf.proxy) {
-		pathRegExp = new RegExp("(?:" + serverConf.proxy.pathPatterns.join(")|(?:") + ")");
-		app.use(getProxyCheckRequestHandler(pathRegExp, serverConf.proxy.target));
-		messages += "\n" + featureStyle("Redirecting") + " path patterns: " + boldStyle(serverConf.proxy.pathPatterns.join(", ")) + " to "
-			+ proxyStyle(typeof serverConf.proxy.target == 'string' ? serverConf.proxy.target : (serverConf.proxy.target.host + ":" + serverConf.proxy.target.port));
+		serverConf.proxy.forEach(function(proxy) {
+			var simplePaths = [];
+			var pathRewrites = [];
+			proxy.pathPatterns.forEach(function(path) {
+				(typeof path == 'string' ? simplePaths : pathRewrites).push(path);
+			});
+			if (simplePaths.length) {
+				app.use(getProxyCheckRequestHandler(new RegExp("(?:" + simplePaths.join(")|(?:") + ")"), proxy.target));
+				messages += "\n" + featureStyle("Redirecting") + " path patterns: " + boldStyle(simplePaths.join(", ")) + " to "
+					+ proxyStyle((typeof proxy.target == 'string' ? proxy.target : (proxy.target.host + ":" + proxy.target.port)) + " (same path)");
+			}
+			pathRewrites.forEach(function(pathObj) {
+				var pathRegExp = Object.keys(pathObj)[0];
+				var pathRewrite = pathObj[pathRegExp];
+				app.use(getProxyCheckRequestHandler(new RegExp(pathRegExp), proxy.target, pathRewrite));
+				messages += "\n" + featureStyle("Redirecting") + " path patterns: " + boldStyle(pathRegExp) + " to "
+					+ proxyStyle((typeof proxy.target == 'string' ? proxy.target : (proxy.target.host + ":" + proxy.target.port)) + "/" + pathRewrite);
+			});
+		});
+
 	}
 	if (serverConf.static && serverConf.static.srcDir && serverConf.static.paths) {
 		for (var path in serverConf.paths) {
