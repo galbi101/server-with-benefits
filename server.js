@@ -136,12 +136,17 @@ conf.servers.forEach(function(serverConf) {
 		});
 
 	}
-	if (serverConf.static && serverConf.static.srcDir && serverConf.static.paths) {
-		for (var path in serverConf.paths) {
-			app.use(path, express.static(serverConf.static.srcDir + serverConf.static.paths[path]));
-		}
+	if (serverConf.webpack) {
+		app.use(require('webpack-dev-middleware')(require('webpack')(require(serverConf.webpack.confFile))));
 	}
-	serverConf.static && serverConf.static.srcDir && app.use(express.static(serverConf.static.srcDir));
+	else if (serverConf.static && serverConf.static.srcDir) {
+		if (serverConf.static.paths) {
+			for (var path in serverConf.paths) {
+				app.use(path, express.static(serverConf.static.srcDir + serverConf.static.paths[path]));
+			}
+		}
+		app.use(express.static(serverConf.static.srcDir));
+	}
 	app.listen(serverConf.port);
 	console.log(messages);
 });

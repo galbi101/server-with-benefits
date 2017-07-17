@@ -9,13 +9,16 @@
 					"/lib": "/lib" // i.e. http://<your_host_name>/lib -> <srcDir>/lib
 				}
 			},
+			"webpack": {
+				"confFile": "path/to/your/webpack.config.js"
+			},
 			"proxy": [ // (OPTIONAL) proxy servers for some path patterns
 				{
 					"target": { // can be an object with host and port, or a full url string e.g. "http://myproxy:80"
 						"host": "hostname",
 						"port": 80
 					},
-					"pathPatterns": [] // e.g. ["^/api/"] or [{"^/api/": "/"}]
+					"pathPatterns": [] // e.g. ["^/api/"] or [{"^/api/": "/"}] (for path rewrite)
 				}
 			],
 			"delay": { // (OPTIONAL) Adding delay to responses for some path patterns

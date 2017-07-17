@@ -6,6 +6,10 @@
 
 A static Node.js file web server with options for proxing requests and delaying/mocking responses. Useful for web development.
 
+## What's new
+
+* v0.14.0 - webpack support!
+
 ## Installation
 
 ```sh
@@ -31,13 +35,18 @@ The configuration file should be of the following format:
 					"/lib": "/lib" // i.e. http://<your_host_name>/lib -> <srcDir>/lib
 				}
 			},
-			"proxy": { // (OPTIONAL) A proxy to a remote server for some path patterns
-				"target": { // can be an object with host and port, or a full url string e.g. "http://myproxy:80"
-					"host": "hostname",
-					"port": 80
-				},
-				"pathPatterns": [] // e.g. ["^/api/"]
+			"webpack": {
+				"confFile": "path/to/your/webpack.config.js"
 			},
+			"proxy": [ // (OPTIONAL) proxy servers for some path patterns
+				{
+					"target": { // can be an object with host and port, or a full url string e.g. "http://myproxy:80"
+						"host": "hostname",
+						"port": 80
+					},
+					"pathPatterns": [] // e.g. ["^/api/"] or [{"^/api/": "/"}] (for path rewrite)
+				}
+			],
 			"delay": { // (OPTIONAL) Adding delay to responses for some path patterns
 				"pathPatterns": [], // e.g. ["^/api/"],
 				"time": 2000 // the delay amount
