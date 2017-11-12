@@ -1,7 +1,7 @@
 {
   "name": "server-with-benefits",
-  "author": "Gal Ben-Ishay <galbi101@gmail.com>",
-  "version": "0.14.0",
+  "author": "Gal Ben-Ishay",
+  "version": "0.15.0",
   "engines": {
     "node": ">=0.10"
   },
@@ -13,7 +13,7 @@
     "body-parser": "~1.8.3",
     "underscore": "~1.7.0",
     "webpack": "^2.7.0",
-    "webpack-dev-middleware": "^1.11.0"
+    "webpack-dev-middleware": "^1.12.0"
   },
   "bin": {
     "swb": "./bin/server"

@@ -2,10 +2,12 @@
 var fs = require('fs');
 var stripJsonComments = require('strip-json-comments');
 var clc = require('cli-color');
+var p = require('path');
+var cwd = process.cwd();
 
 const 
 	ENV_VAR_KEY = 'SWB_CONF_FILE',
-	CONF_FILE = process.argv[2] || process.env[ENV_VAR_KEY] || (process.cwd() + '/swbConfig.json'),
+	CONF_FILE = (process.argv[2] && p.resolve(cwd, process.argv[2])) || process.env[ENV_VAR_KEY] || p.resolve(cwd, './swbConfig.json'),
 	// Console text styling
 	errorStyle = clc.red.bold,
 	headerStyle = clc.yellow.bold,
@@ -137,15 +139,15 @@ conf.servers.forEach(function(serverConf) {
 
 	}
 	if (serverConf.webpack) {
-		app.use(require('webpack-dev-middleware')(require('webpack')(require(serverConf.webpack.confFile))));
+		app.use(require('webpack-dev-middleware')(require('webpack')(require(p.resolve(cwd, serverConf.webpack.confFile)))));
 	}
 	else if (serverConf.static && serverConf.static.srcDir) {
 		if (serverConf.static.paths) {
 			for (var path in serverConf.paths) {
-				app.use(path, express.static(serverConf.static.srcDir + serverConf.static.paths[path]));
+				app.use(path, express.static(p.resolve(cwd, serverConf.static.srcDir + serverConf.static.paths[path])));
 			}
 		}
-		app.use(express.static(serverConf.static.srcDir));
+		app.use(express.static(p.resolve(cwd, serverConf.static.srcDir)));
 	}
 	app.listen(serverConf.port);
 	console.log(messages);
