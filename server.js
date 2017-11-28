@@ -5,7 +5,7 @@ var clc = require('cli-color');
 var p = require('path');
 var cwd = process.cwd();
 
-const 
+const
 	ENV_VAR_KEY = 'SWB_CONF_FILE',
 	CONF_FILE = (process.argv[2] && p.resolve(cwd, process.argv[2])) || process.env[ENV_VAR_KEY] || p.resolve(cwd, './swbConfig.json'),
 	// Console text styling
@@ -74,14 +74,24 @@ var getFixtureCheckRequestHandler = function(fixtures) {
 		}
 	};
 };
-var getProxyCheckRequestHandler = function(pathRegExp, proxyTarget, pathRewrite) {
+var getProxyCheckRequestHandler = function(pathRegExp, proxyTarget, hostRegExp, pathRewrite) {
 	return function(req, res, next) {
 		if (pathRegExp.test(req.url)) {
+			var target = proxyTarget;
 			if (pathRewrite != null) {
 				req.url = req.url.replace(new RegExp(pathRegExp), pathRewrite);
 			}
+			if (hostRegExp) {
+				var resArr = hostRegExp.exec(req.hostname);
+				if (resArr) {
+					target = {
+						host: resArr[resArr.length - 1],
+						port: proxyTarget.port
+					};
+				}
+			}
 			proxy.web(req, res, {
-				target: proxyTarget
+				target: target
 			});
 		}
 		else {
@@ -120,18 +130,19 @@ conf.servers.forEach(function(serverConf) {
 		serverConf.proxy.forEach(function(proxy) {
 			var simplePaths = [];
 			var pathRewrites = [];
+			var hostRegExp = proxy.hostPattern && new RegExp(proxy.hostPattern);
 			proxy.pathPatterns.forEach(function(path) {
 				(typeof path == 'string' ? simplePaths : pathRewrites).push(path);
 			});
 			if (simplePaths.length) {
-				app.use(getProxyCheckRequestHandler(new RegExp("(?:" + simplePaths.join(")|(?:") + ")"), proxy.target));
+				app.use(getProxyCheckRequestHandler(new RegExp("(?:" + simplePaths.join(")|(?:") + ")"), proxy.target, hostRegExp));
 				messages += "\n" + featureStyle("Redirecting") + " path patterns: " + boldStyle(simplePaths.join(", ")) + " to "
 					+ proxyStyle((typeof proxy.target == 'string' ? proxy.target : (proxy.target.host + ":" + proxy.target.port)) + " (same path)");
 			}
 			pathRewrites.forEach(function(pathObj) {
 				var pathRegExp = Object.keys(pathObj)[0];
 				var pathRewrite = pathObj[pathRegExp];
-				app.use(getProxyCheckRequestHandler(new RegExp(pathRegExp), proxy.target, pathRewrite));
+				app.use(getProxyCheckRequestHandler(new RegExp(pathRegExp), proxy.target, hostRegExp, pathRewrite));
 				messages += "\n" + featureStyle("Redirecting") + " path patterns: " + boldStyle(pathRegExp) + " to "
 					+ proxyStyle((typeof proxy.target == 'string' ? proxy.target : (proxy.target.host + ":" + proxy.target.port)) + "/" + pathRewrite);
 			});

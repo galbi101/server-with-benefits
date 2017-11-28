@@ -44,6 +44,7 @@ The configuration file should be of the following format:
 						"host": "hostname",
 						"port": 80
 					},
+					"hostPattern": null, // (OPTIONAL) extract the last match from this regex executed on the url hostname, and replace the target host with it
 					"pathPatterns": [] // e.g. ["^/api/"] or [{"^/api/": "/"}] (for path rewrite)
 				}
 			],
