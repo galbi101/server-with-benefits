@@ -131,9 +131,11 @@ conf.servers.forEach(function(serverConf) {
 			var simplePaths = [];
 			var pathRewrites = [];
 			var hostRegExp = proxy.hostPattern && new RegExp(proxy.hostPattern);
-			proxy.pathPatterns.forEach(function(path) {
-				(typeof path == 'string' ? simplePaths : pathRewrites).push(path);
-			});
+			if (proxy.pathPatterns) {
+				proxy.pathPatterns.forEach(function(path) {
+					(typeof path == 'string' ? simplePaths : pathRewrites).push(path);
+				});
+			}
 			if (simplePaths.length) {
 				app.use(getProxyCheckRequestHandler(new RegExp("(?:" + simplePaths.join(")|(?:") + ")"), proxy.target, hostRegExp));
 				messages += "\n" + featureStyle("Redirecting") + " path patterns: " + boldStyle(simplePaths.join(", ")) + " to "
